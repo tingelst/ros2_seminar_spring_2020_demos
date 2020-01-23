@@ -27,7 +27,7 @@ class SimpleRobotDriverNode(Node):
         self._pub = self.create_publisher(JointState, 'joint_states', 10)
         self._sub = self.create_subscription(
             PositionCommand, 'command', self._command_callback, 10)
-        self._timer = self.create_timer(0.1, self._timer_callback)
+        self._timer = self.create_timer(0.01, self._timer_callback)
 
         self._position = [0.0, -1.5708, 1.5708, 0.0, 1.5708, 0.0]
         self._velocity = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -44,14 +44,15 @@ class SimpleRobotDriverNode(Node):
     def _command_callback(self, msg):
         self._position = copy(msg.command)
 
+
 def main(args=None):
     rclpy.init(args=args)
-    try:
-        simple_robot_driver_node = SimpleRobotDriverNode()
-        rclpy.spin(simple_robot_driver_node)
-    finally:
-        simple_robot_driver_node.destroy_node()
-        rclpy.shutdown()
+
+    simple_robot_driver_node = SimpleRobotDriverNode()
+    rclpy.spin(simple_robot_driver_node)
+
+    simple_robot_driver_node.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
