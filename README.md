@@ -226,5 +226,79 @@ if __name__ == '__main__':
     main()
 ```
 
+##### Examine the code
+
+The first lines of code import the relevant modules from the Python installation:
+```python
+import numpy as np
+import time
+from copy import copy
+```
+
+Then, we import rclpy so its Node class can be used.
+```python 
+import rclpy
+from rclpy.node import Node
+```
+
+The next statement imports the message types `JointState` and `PositionCommand` that the node uses to subscribe and publish on topics.
+
+```python
+import numpy as np
+import time
+from copy import copy
+```
+
+Next, the `SimpleControllerNode` class is created, which inherits from (or is a subclass of) Node.
+```python
+class SimpleControllerNode(Node):
+```
+
+Following is the definition of the class’s constructor. super().__init__ calls the Node class’s constructor and gives it your node name, in this case `'simple_robot_controller'`.
+
+`create_publisher` declares that the node publishes messages of type `PositionCommand` (imported from the `control_interfaces.msg` module), over a topic named `command`, and that the “queue size” is 10. Queue size is a required QoS (quality of service) setting that limits the amount of queued messages if a subscriber is not receiving them fast enough.
+
+```python
+self._pub = self.create_publisher(PositionCommand, 'command', 10)
+```
+
+`create_subscriber` declares that the node subscribes to messages of type `JointState` on the topic `joint_states`. Each time we receive a new message on this topic the callback function `_callback` is called.
+
+```python
+self._sub = self.create_subscription(
+    JointState, 'joint_states', self._callback, 10)
+```
+
+The callback function stores the time we received the first message, as well as the initial position of the robot. Then we compute a correction to this initial position as a sine wave, and then publishes the message.
+
+```python
+def _callback(self, msg):
+    if self._t0 is None:
+        self._t0 = time.time()
+        self._initial_position = copy(msg.position)
+
+    command_msg = PositionCommand()
+    command_msg.command = copy(msg.position)
+
+    correction = 0.1 * (np.sin(3.0 * (time.time() - self._t0)))
+    command_msg.command[0] = self._initial_position[0] + correction
+
+    self._pub.publish(command_msg)
+```
+
+Lastly, the main function is defined.
+```python
+def main(args=None):
+    rclpy.init(args=args)
+
+    simple_controller_node = SimpleControllerNode()
+    rclpy.spin(simple_controller_node)
+    
+    simple_controller_node.destroy_node()
+    rclpy.shutdown()
+```
+
+First the rclpy library is initialized, then the node is created, and then it “spins” the node so its callbacks are called.
+
 
 
