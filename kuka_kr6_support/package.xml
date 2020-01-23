@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>kuka_kr6_support</name>
+  <version>0.1.0</version>
+  <description>
+    ROS2 package for the KUKA KR6 R900 sixx (Agilus)
+  </description>
+  <author>G.A. vd. Hoorn (TU Delft Robotics Institute)</author>
+  <author>Brett Hemes (3M)</author>
+  <maintainer email="lars.tingelstad@ntnu.no">Lars Tingelstad</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>urdf</depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
