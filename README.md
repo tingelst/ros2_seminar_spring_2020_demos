@@ -133,7 +133,7 @@ cd ~/dev_ws
 ```
 Now you can build your packages:
 ```bash
-colcon build
+colcon build --symlink-install
 ```
 
 To build only the `simple_controller` package next time, you can run:
