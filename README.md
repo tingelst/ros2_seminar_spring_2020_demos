@@ -312,6 +312,7 @@ We are now ready to bringup all the required components of our system:
 
 The primary 3D visualization tool in ROS and ROS2 is called RViz. To bringup the 3D visualization of the robot in RViz open up a new terminal and run the following:
 ```bash
+source ~/dev_ws/install/setup.bash
 ros2 launch kuka_kr6_support test_kr6r900sixx.launch.py
 ```
 
@@ -319,6 +320,7 @@ ros2 launch kuka_kr6_support test_kr6r900sixx.launch.py
 
 To run the robot driver open up a new terminal and run the following:
 ```bash
+source ~/dev_ws/install/setup.bash
 ros2 run simple_robot_driver simple_robot_driver_node
 ```
 This launches a node that subscribes to a position command message, executes the command, and publishes the current state of the robot.
@@ -327,6 +329,7 @@ This launches a node that subscribes to a position command message, executes the
 
 We are now ready to launch the robot controller which subscribes to the current state of the robot and in each cycle publishes a new command. Open up a new terminal and run the following:
 ```bash
+source ~/dev_ws/install/setup.bash
 ros2 run simple_controller simple_controller_node 
 ```
 
