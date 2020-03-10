@@ -15,6 +15,8 @@
 import numpy as np
 import time
 from copy import copy
+import socket
+import struct
 
 import rclpy
 from rclpy.node import Node
@@ -22,37 +24,57 @@ from sensor_msgs.msg import JointState
 from control_interfaces.msg import PositionCommand
 
 
-class SimpleControllerNode(Node):
+class RpiJointJoggerNode(Node):
     def __init__(self):
         super().__init__('simple_robot_controller')
+
+        self._sensor_host = '192.168.0.10'
+        self._sensor_port = 50007
+        self._sensor_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._sensor_socket.connect((self._sensor_host, self._sensor_port))
+
         self._pub = self.create_publisher(PositionCommand, 'command', 10)
         self._sub = self.create_subscription(
             JointState, 'joint_states', self._callback, 10)
 
-        self._t0 = None
-        self._initial_position = None
+        self._active_joint = 0
+
+    def __del__(self):
+        self._sensor_socket.close()
 
     def _callback(self, msg):
-        if self._t0 is None:
-            self._t0 = time.time()
-            self._initial_position = copy(msg.position)
 
         command_msg = PositionCommand()
         command_msg.command = copy(msg.position)
 
-        correction = 0.1 * (np.sin(3.0 * (time.time() - self._t0)))
-        command_msg.command[0] = self._initial_position[0] + correction
+        self._sensor_socket.sendall(struct.pack('I', self._active_joint + 1))
+        event = self._sensor_socket.recv(1024)
 
-        self._pub.publish(command_msg)
+        if event == b'up':
+            if self._active_joint == 5:
+                self._active_joint = 0
+            else:
+                self._active_joint += 1
+        elif event == b'down':
+            if self._active_joint == 0:
+                self._active_joint = 5
+            else:
+                self._active_joint -= 1
+        elif event == b'left':
+            command_msg.command[self._active_joint] += 0.1
+            self._pub.publish(command_msg)
+        elif event == b'right':
+            command_msg.command[self._active_joint] -= 0.1
+            self._pub.publish(command_msg)
 
 
 def main(args=None):
     rclpy.init(args=args)
 
-    simple_controller_node = SimpleControllerNode()
-    rclpy.spin(simple_controller_node)
-    
-    simple_controller_node.destroy_node()
+    rpi_joint_jogger_node = RpiJointJoggerNode()
+    rclpy.spin(rpi_joint_jogger_node)
+
+    rpi_joint_jogger_node.destroy_node()
     rclpy.shutdown()
 
 
