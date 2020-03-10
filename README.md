@@ -1,9 +1,9 @@
 # ros2_seminar_spring_2020_demos
-Demos for the spring seminar on ROS2 in the Robotics and Automation group at MTP, NTNU.
+Demos for the spring seminars on ROS2 in the Robotics and Automation group at MTP, NTNU.
 
 The following tutorial is based on the tutorials found at https://index.ros.org/doc/ros2/Tutorials/.
 
-## Building a simple velocity controller
+## Building a simple robot controller
 
 ### Creating a workspace
 
@@ -301,4 +301,33 @@ def main(args=None):
 First the rclpy library is initialized, then the node is created, and then it “spins” the node so its callbacks are called.
 
 
+### Launch the whole system
 
+We are now ready to bringup all the required components of our system: 
+1. the robot visualization
+2. the robot driver
+3. the robot controller
+
+#### Visualization
+
+The primary 3D visualization tool in ROS and ROS2 is called RViz. To bringup the 3D visualization of the robot in RViz open up a new terminal and run the following:
+```bash
+ros2 launch kuka_kr6_support test_kr6r900sixx.launch.py
+```
+
+#### Robot driver
+
+To run the robot driver open up a new terminal and run the following:
+```bash
+ros2 run simple_robot_driver simple_robot_driver_node
+```
+This launches a node that subscribes to a position command message, executes the command, and publishes the current state of the robot.
+
+#### Robot controller
+
+We are now ready to launch the robot controller which subscribes to the current state of the robot and in each cycle publishes a new command. Open up a new terminal and run the following:
+```bash
+ros2 run simple_controller simple_controller_node 
+```
+
+If we are lucky, the robot should now move from side to side!
