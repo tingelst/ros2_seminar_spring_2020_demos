@@ -30,24 +30,11 @@ Ensure you’re still in the dev_ws/src directory before you clone.
 git clone https://github.com/tingelst/ros2_seminar_spring_2020_demos.git
 ```
 
-#### Resolve dependencies
-
-From the root of your workspace (~/dev_ws), you need to resolve package dependencies.
-
-```bash
-sudo rosdep install -i --from-path src --rosdistro eloquent -y
-```
-
-If you already have all your dependencies, the console will return:
-```bash
-#All required rosdeps installed successfully
-```
-
 #### Build the workspace with colcon
 From the root of your workspace (~/dev_ws), you can now build your packages using the command:
 
 ```bash
-colcon build
+colcon build --symlink-install
 ```
 
 #### Source the overlay
