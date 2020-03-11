@@ -40,6 +40,7 @@ sudo apt install git
 From the root of your workspace (~/dev_ws), you can now build your packages using the command:
 
 ```bash
+cd ~/dev_ws
 colcon build --symlink-install
 ```
 
