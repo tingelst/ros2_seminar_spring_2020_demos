@@ -30,6 +30,12 @@ Ensure you’re still in the dev_ws/src directory before you clone.
 git clone https://github.com/tingelst/ros2_seminar_spring_2020_demos.git
 ```
 
+If `git`  is not installed:
+```bash
+sudo apt update
+sudo apt install git
+```
+
 #### Build the workspace with colcon
 From the root of your workspace (~/dev_ws), you can now build your packages using the command:
 
