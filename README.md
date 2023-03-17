@@ -10,7 +10,7 @@ The following tutorial is based on the tutorials found at https://index.ros.org/
 #### Source ROS2 environment.
 The first step is to source the underlying ROS2 installation:
 ```bash 
-source /opt/ros/foxy/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 
 #### Create a workspace
@@ -50,7 +50,7 @@ Before sourcing the overlay, it is very important that you open a new terminal, 
 
 In the new terminal, source your main ROS 2 environment as the “underlay”, so you can build the overlay “on top of” it:
 ```bash
-source /opt/ros/foxy/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 Go into the root of your workspace:
 ```bash
